@@ -1,1 +1,3 @@
-0 0 0 0 0 0
+1 2 2 100 2 2
+CACAO 1 Yes
+TRICE 3 Yes

@@ -13,42 +13,22 @@
 using namespace std;
 
 struct Stats {
-    int gameState;
-    int timesPlayed;
-    int averageAttempts;
-    int winPercentage;
-    int currentStreak;
-    int longestStreak;
-    vector<string> Words;
+    int gameState, timesPlayed, averageAttempts, winPercentage, currentStreak, longestStreak;
+    vector<string> Words, Wins;
     vector<int> Attempts;
-    vector<string> Wins;
 };
 
-void printTop(string COLOR) {
-    cout << COLOR << " --- " << RESET;
-}
-
-void printMiddle(char c, string COLOR) {
-    cout << COLOR << "| " << c << " |" << RESET;
-}
-
-void printBottom(string COLOR) {
-    cout << COLOR << " --- " << RESET;
-}
+void printTop(string COLOR) { cout << COLOR << " --- " << RESET; }
+void printMiddle(char c, string COLOR) { cout << COLOR << "| " << c << " |" << RESET; }
+void printBottom(string COLOR) { cout << COLOR << " --- " << RESET; }
 
 void readStatsFile(Stats& stats) {
     ifstream file("stats.txt");
-
     if (file.is_open()) {
-        stats.Words.clear();
-        stats.Attempts.clear();
-        stats.Wins.clear();
-
+        stats.Words.clear(), stats.Attempts.clear(), stats.Wins.clear();
         file >> stats.gameState >> stats.timesPlayed >> stats.averageAttempts >> stats.winPercentage >> stats.currentStreak >> stats.longestStreak;
-
         string word, win, line;
         int attempt;
-
         getline(file, line);
         while (getline(file, line)) {
             stats.Words.push_back(line.substr(0, line.find(' ')));
@@ -64,32 +44,19 @@ void readStatsFile(Stats& stats) {
 
 void updateStatsFile(Stats& stats) {
     ofstream file("stats.txt", ios::trunc);
-
     if (file.is_open()) {
-        int numWins = 0;
-        int longestStreak = 0;
-        int currentStreak = 0;
-        int attemptSum = 0;
+        int numWins = 0, longestStreak = 0, currentStreak = 0, attemptSum = 0;
         for (string win : stats.Wins) {
             if (win == "Yes") {
-                numWins++;
-                currentStreak++;
+                numWins++, currentStreak++;
                 if (currentStreak > longestStreak) longestStreak = currentStreak;
-            } else {
-                currentStreak = 0;
-            }
+            } else currentStreak = 0;
         }
-
-        for (int i : stats.Attempts) {
-            attemptSum += i;
-        }
-
+        for (int i : stats.Attempts) attemptSum += i;
         stats.timesPlayed = stats.Words.size();
         stats.averageAttempts = stats.timesPlayed ? attemptSum/stats.Attempts.size() : 0;
         stats.winPercentage = stats.timesPlayed ? ((float)numWins/stats.Wins.size())*100 : 0;
-        stats.currentStreak = currentStreak;
-        stats.longestStreak = longestStreak;
-
+        stats.currentStreak = currentStreak, stats.longestStreak = longestStreak;
         file << stats.gameState << ' ' << stats.timesPlayed << ' ' << stats.averageAttempts << ' ' << stats.winPercentage << ' ' << stats.currentStreak << ' ' << stats.longestStreak << '\n';
         for (int i = 0; i < stats.Words.size(); i++) {
             file << stats.Words[i] << ' ' << stats.Attempts[i] << ' ' << stats.Wins[i] << '\n';
@@ -101,7 +68,7 @@ void updateStatsFile(Stats& stats) {
 void resetStatsFile() {
     ofstream file("stats.txt", ios::trunc);
     if (file.is_open()) {
-        file << "1 " << "0 " << "0 " << "0 " << "0 " << '0';
+        file << "1 0 0 0 0 0 0";
         file.close();
     } else cerr << "Error: Could not open file." << endl;
 }
@@ -197,10 +164,8 @@ void startGame(Stats& stats) {
             if (index != string::npos) {
                 if (index == i) {
                     color.push_back(GREEN);
-
                 } else {
                     color.push_back(YELLOW);
-
                 }
                 temp_answer[index] = ' ';
             } else {
@@ -219,6 +184,47 @@ void startGame(Stats& stats) {
             printGameScreen(guesses, answer_upper, gameState, colors);
             break;
         } else printGameScreen(guesses, answer_upper, gameState, colors);
+
+        string green_keys;
+        string yellow_keys;
+        string black_keys;
+
+        ifstream keyboard_file("keyboard.txt");
+        if (keyboard_file.is_open()) {
+            string line;
+            getline(keyboard_file, line);
+            green_keys = line;
+            getline(keyboard_file, line);
+            yellow_keys = line;
+            getline(keyboard_file, line);
+            black_keys = line;
+
+        } else {
+            cerr << "Error: File could not be opened" << endl;
+        }  
+        keyboard_file.close();
+
+        vector<string> color_rows = {black_keys, yellow_keys, green_keys};
+
+        ofstream keyboard_file2("keyboard.txt", ios::trunc);
+        if (keyboard_file2.is_open()) {
+            for (int i = 0; i < 3; i++) {
+                keyboard_file2 << color_rows[i];
+                for (int j = 0; j < colors.back().size(); j++) {
+                    if (i == 0 && colors.back()[j] == BLACK) {
+                        keyboard_file2 << guess_upper[j];
+                    } else if (i == 1 && colors.back()[j] == YELLOW) {
+                        keyboard_file2 << guess_upper[j];
+                    } else if (i == 2 && colors.back()[j] == GREEN) {
+                        keyboard_file2 << guess_upper[j];
+                    }
+                }
+                keyboard_file2 << '\n';
+            }
+        } else {
+            cerr << "Error: File could not be opened" << endl;
+        }
+        keyboard_file2.close();
     }
 
     stats.Words.push_back(answer_upper);
