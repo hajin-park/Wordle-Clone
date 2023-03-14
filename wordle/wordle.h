@@ -9,6 +9,7 @@
 #include <vector>
 #include <fstream>
 #include <stdlib.h>
+#include <random>
 
 using namespace std;
 
@@ -102,7 +103,10 @@ void printGameScreen(vector<string> guesses, string answer, string gameState, ve
 }
 
 string getRandomWord() {
-    int number = rand() % 2316;
+    random_device rd; // obtain a random number from hardware
+    mt19937 gen(rd()); // seed the generator
+    uniform_int_distribution<> distr(0, 2315); // define the range
+    int number = distr(gen);
     string answer_lower;
     ifstream file("words.txt");
     for (int i = 0; i < number; i++) getline(file, answer_lower);
@@ -175,29 +179,19 @@ void startGame(Stats& stats) {
         }
         colors.push_back(color);
 
-        if (guess_upper == answer_upper) {
-            gameState = "win";
-            printGameScreen(guesses, answer_upper, gameState, colors);
-            break;
-        } else if (guesses.size() == 6) {
-            gameState = "lose";
-            printGameScreen(guesses, answer_upper, gameState, colors);
-            break;
-        } else printGameScreen(guesses, answer_upper, gameState, colors);
-
-        string green_keys;
-        string yellow_keys;
         string black_keys;
+        string yellow_keys;
+        string green_keys;
 
         ifstream keyboard_file("keyboard.txt");
         if (keyboard_file.is_open()) {
             string line;
             getline(keyboard_file, line);
-            green_keys = line;
+            black_keys = line;
             getline(keyboard_file, line);
             yellow_keys = line;
             getline(keyboard_file, line);
-            black_keys = line;
+            green_keys = line;
 
         } else {
             cerr << "Error: File could not be opened" << endl;
@@ -225,6 +219,16 @@ void startGame(Stats& stats) {
             cerr << "Error: File could not be opened" << endl;
         }
         keyboard_file2.close();
+
+        if (guess_upper == answer_upper) {
+            gameState = "win";
+            printGameScreen(guesses, answer_upper, gameState, colors);
+            break;
+        } else if (guesses.size() == 6) {
+            gameState = "lose";
+            printGameScreen(guesses, answer_upper, gameState, colors);
+            break;
+        } else printGameScreen(guesses, answer_upper, gameState, colors);
     }
 
     stats.Words.push_back(answer_upper);
