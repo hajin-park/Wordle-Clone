@@ -8,23 +8,29 @@
 using namespace std;
 
 int main(int argc, char* argv[]) {
+
+    // New game initializes current game statistics and user input variable
     Stats stats;
     string user_option;
     
+    // Read in stored game statistics and print out initial menu screen.
     system("clear");
     readStatsFile(stats);
     updateStatsFile(stats);
     printMenuScreen();
     
+    // Main game loop, check user inputs for options 1-5 only
     while (cin >> user_option) {
         cin.ignore();
 
+        // Exit the Wordle program, update the program state for the keyboard program before exiting
         if (user_option == "5") {
             stats.gameState = 0;
             updateStatsFile(stats);
             system("clear");
             break;
 
+        // Start a new game session, update the stats.txt file before and after the game ends
         } else if (user_option == "1") {
             system("clear");
             stats.gameState = 2;
@@ -33,6 +39,7 @@ int main(int argc, char* argv[]) {
             stats.gameState = 1;
             updateStatsFile(stats);
 
+        // Print out the tutorial screen
         } else if (user_option == "2") {
             while (!user_option.empty()) {
                 system("clear");
@@ -40,6 +47,7 @@ int main(int argc, char* argv[]) {
                 getline(cin, user_option);
             }
 
+        // Print out the stats screen
         } else if (user_option == "3") {
             while (!user_option.empty()) {
                 system("clear");
@@ -55,6 +63,7 @@ int main(int argc, char* argv[]) {
                 getline(cin, user_option);
             }
 
+        // Reset stats.txt and the game stats, then print out the stats screen.
         } else if (user_option == "4") {
             resetStatsFile();
             readStatsFile(stats);
@@ -73,6 +82,7 @@ int main(int argc, char* argv[]) {
             }
         }
 
+        // Reset the console to the menu screen at the end of each process
         system("clear");
         printMenuScreen();
     }

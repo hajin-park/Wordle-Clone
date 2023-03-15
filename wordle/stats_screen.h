@@ -28,7 +28,7 @@ void printStatsScreen(
     cout << "WORD     ATTEMPTS      WIN" << endl;
     cout << "--------------------------" << endl;
     for (int i = 0; i < Words.size(); i++) {
-        cout << Words[i] << setw(17-Words[i].size()) << right << Attempts[i] << setw(9) << right << Wins[i] << endl;
+        cout << Words[i] << setw(12) << right << Attempts[i] << setw(9) << right << Wins[i] << endl;
     }
     cout << endl << endl;
     cout << "Press [enter] to continue" << endl;

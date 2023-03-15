@@ -19,10 +19,6 @@ struct Stats {
     vector<int> Attempts;
 };
 
-void printTop(string COLOR) { cout << COLOR << " --- " << RESET; }
-void printMiddle(char c, string COLOR) { cout << COLOR << "| " << c << " |" << RESET; }
-void printBottom(string COLOR) { cout << COLOR << " --- " << RESET; }
-
 void readStatsFile(Stats& stats) {
     ifstream file("stats.txt");
     if (file.is_open()) {
@@ -30,7 +26,7 @@ void readStatsFile(Stats& stats) {
         file >> stats.gameState >> stats.timesPlayed >> stats.averageAttempts >> stats.winPercentage >> stats.currentStreak >> stats.longestStreak;
         string word, win, line;
         int attempt;
-        getline(file, line);
+        getline(file, line); // Skip the first line of stats.txt
         while (getline(file, line)) {
             stats.Words.push_back(line.substr(0, line.find(' ')));
             line.erase(0, line.find(' ')+1);
@@ -74,19 +70,23 @@ void resetStatsFile() {
     } else cerr << "Error: Could not open file." << endl;
 }
 
+void printTop(string COLOR) { cout << COLOR << " --- " << RESET; }
+void printMiddle(char c, string COLOR) { cout << COLOR << "| " << c << " |" << RESET; }
+void printBottom(string COLOR) { cout << COLOR << " --- " << RESET; }
+
 void printGameScreen(vector<string> guesses, string answer, string gameState, vector<vector<string>> colors) {
     system("clear");
 
     for (int i = 0; i < guesses.size(); i++) {
-        for (int j = 0; j < guesses[i].size(); j++) {
+        for (int j = 0; j < 5; j++) {
             printTop(colors[i][j]);
         }
         cout << endl;
-        for (int j = 0; j < guesses[i].size(); j++) {
+        for (int j = 0; j < 5; j++) {
             printMiddle(guesses[i][j], colors[i][j]);
         }
         cout << endl;
-        for (int j = 0; j < guesses[i].size(); j++) {
+        for (int j = 0; j < 5; j++) {
             printBottom(colors[i][j]);
         }
         cout << endl;
@@ -116,9 +116,9 @@ string getRandomWord() {
 }
 
 void startGame(Stats& stats) {
-    vector<string> guesses;
-    vector<vector<string>> colors;
-    string guess_lower;
+    vector<string> guesses;         // {"poops", "peeps", "examp"}
+    vector<vector<string>> colors;  // {{GREEN, BLACK, BLACK, BLACK, BLACK},{{GREEN, BLACK, BLACK, BLACK, BLACK}},{{GREEN, BLACK, BLACK, BLACK, BLACK}}}
+    string guess_lower; // Lower
     string guess_upper;
     string answer_lower = getRandomWord();
     string answer_upper = answer_lower;
