@@ -1,1 +1,4 @@
-2 0 0 0 0 0
+2 3 6 0 0 0
+BAGGY 6 No
+CADDY 6 No
+WISPY 6 No
