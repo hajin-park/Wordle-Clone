@@ -6,10 +6,12 @@
 #define GREEN "\033[32m"
 
 #include <iostream>
-#include <vector>
+#include <sstream>
 #include <fstream>
-#include <stdlib.h>
+#include <vector>
 #include <random>
+#include <stdlib.h>
+#include <bits/stdc++.h>
 
 using namespace std;
 
@@ -21,22 +23,31 @@ struct Stats {
 
 void readStatsFile(Stats& stats) {
     ifstream file("stats.txt");
-    if (file.is_open()) {
-        stats.Words.clear(), stats.Attempts.clear(), stats.Wins.clear();
-        file >> stats.gameState >> stats.timesPlayed >> stats.averageAttempts >> stats.winPercentage >> stats.currentStreak >> stats.longestStreak;
-        string word, win, line;
-        int attempt;
-        getline(file, line); // Skip the first line of stats.txt
-        while (getline(file, line)) {
-            stats.Words.push_back(line.substr(0, line.find(' ')));
-            line.erase(0, line.find(' ')+1);
-            stats.Attempts.push_back(stoi(line.substr(0, line.find(' '))));
-            line.erase(0, line.find(' ')+1);
-            stats.Wins.push_back(line.substr(0, line.size()));
+    if (file) {
+        stats.Words.clear();
+        stats.Attempts.clear();
+        stats.Wins.clear();
+        file >> stats.gameState
+             >> stats.timesPlayed
+             >> stats.averageAttempts
+             >> stats.winPercentage
+             >> stats.currentStreak
+             >> stats.longestStreak;
+        std::string line;
+        std::getline(file, line); // Skip the first line of stats.txt
+        while (std::getline(file, line)) {
+            istringstream iss(line);
+            string word, win;
+            int attempt;
+            iss >> word >> attempt >> win;
+            stats.Words.push_back(word);
+            stats.Attempts.push_back(attempt);
+            stats.Wins.push_back(win);
         }
         stats.gameState = 1;
-        file.close();
-    } else cerr << "Error: Could not open file." << endl;
+    } else {
+        std::cerr << "Error: Could not open file.\n";
+    }
 }
 
 void updateStatsFile(Stats& stats) {
@@ -73,7 +84,6 @@ void resetStatsFile() {
 void printTop(string COLOR) { cout << COLOR << " --- " << RESET; }
 void printMiddle(char c, string COLOR) { cout << COLOR << "| " << c << " |" << RESET; }
 void printBottom(string COLOR) { cout << COLOR << " --- " << RESET; }
-
 void printGameScreen(vector<string> guesses, string answer, string gameState, vector<vector<string>> colors) {
     system("clear");
 
@@ -116,61 +126,42 @@ string getRandomWord() {
 }
 
 void startGame(Stats& stats) {
-    vector<string> guesses;         // {"poops", "peeps", "examp"}
-    vector<vector<string>> colors;  // {{GREEN, BLACK, BLACK, BLACK, BLACK},{{GREEN, BLACK, BLACK, BLACK, BLACK}},{{GREEN, BLACK, BLACK, BLACK, BLACK}}}
-    string guess_lower; // Lower
-    string guess_upper;
+    vector<string> guesses;
+    vector<vector<string>> colors;
+    string guess_lower;
     string answer_lower = getRandomWord();
     string answer_upper = answer_lower;
-    string temp_answer;
-    for (int i = 0; i < answer_upper.size(); i++) {
-        answer_upper[i] = toupper(answer_upper[i]);
-    }
+    transform(answer_upper.begin(), answer_upper.end(), answer_upper.begin(), ::toupper);
     string gameState = "active";
 
     while (gameState == "active") {
-        vector<string> color;
-        string line;
         bool valid_guess = false;
+        string line;
+        vector<string> color;
         while (!valid_guess) {
             ifstream file("allowed.txt");
             ifstream file2("words.txt");
             cout << "Enter guess: ";
             cin >> guess_lower;
-            while (getline(file, line)) {
+            while (getline(file, line) || getline(file2, line)) {
                 if ((line.find(guess_lower) != string::npos && guess_lower.size() == 5) || guess_lower == answer_lower) {
                     valid_guess = true;
-                    file.close();
-                    break;
-                }
-            }
-            while (getline(file2, line)) {
-                if ((line.find(guess_lower) != string::npos && guess_lower.size() == 5) || guess_lower == answer_lower) {
-                    valid_guess = true;
-                    file.close();
                     break;
                 }
             }
             file.close();
+            file2.close();
         }
 
-        guess_upper = guess_lower;
-        for (int i = 0; i < guess_upper.size(); i++) {
-            guess_upper[i] = toupper(guess_upper[i]);
-        }
-
+        string guess_upper = guess_lower;
+        transform(guess_upper.begin(), guess_upper.end(), guess_upper.begin(), ::toupper);
         guesses.push_back(guess_upper);
-        temp_answer = answer_upper;
+        string temp_answer = answer_upper;
 
         for (int i = 0; i < guess_upper.size(); i++) {
             size_t index = temp_answer.find(guess_upper[i]);
-
             if (index != string::npos) {
-                if (index == i) {
-                    color.push_back(GREEN);
-                } else {
-                    color.push_back(YELLOW);
-                }
+                color.push_back((index == i) ? GREEN : YELLOW);
                 temp_answer[index] = ' ';
             } else {
                 color.push_back(BLACK);
@@ -187,34 +178,28 @@ void startGame(Stats& stats) {
         if (keyboard_file.is_open()) {
             string line;
             getline(keyboard_file, line);
-            black_keys = line;
+            black_keys = line + string(5, ' ');
             getline(keyboard_file, line);
-            yellow_keys = line;
+            yellow_keys = line + string(5, ' ');
             getline(keyboard_file, line);
-            green_keys = line;
-
+            green_keys = line + string(5, ' ');
         } else {
             cerr << "Error: File could not be opened" << endl;
         }  
         keyboard_file.close();
 
-        vector<string> color_rows = {black_keys, yellow_keys, green_keys};
-
         ofstream keyboard_file2("keyboard.txt", ios::trunc);
         if (keyboard_file2.is_open()) {
-            for (int i = 0; i < 3; i++) {
-                keyboard_file2 << color_rows[i];
-                for (int j = 0; j < colors.back().size(); j++) {
-                    if (i == 0 && colors.back()[j] == BLACK) {
-                        keyboard_file2 << guess_upper[j];
-                    } else if (i == 1 && colors.back()[j] == YELLOW) {
-                        keyboard_file2 << guess_upper[j];
-                    } else if (i == 2 && colors.back()[j] == GREEN) {
-                        keyboard_file2 << guess_upper[j];
-                    }
+            for (int i = 0; i < 5; i++) {
+                if (colors.back()[i] == BLACK) {
+                    black_keys[black_keys.size()-5+i] = guess_upper[i];
+                } else if (colors.back()[i] == YELLOW) {
+                    yellow_keys[yellow_keys.size()-5+i] = guess_upper[i];
+                } else if (colors.back()[i] == GREEN) {
+                    green_keys[green_keys.size()-5+i] = guess_upper[i];
                 }
-                keyboard_file2 << '\n';
             }
+            keyboard_file2 << black_keys << '\n' << yellow_keys << '\n' << green_keys;
         } else {
             cerr << "Error: File could not be opened" << endl;
         }
@@ -222,13 +207,10 @@ void startGame(Stats& stats) {
 
         if (guess_upper == answer_upper) {
             gameState = "win";
-            printGameScreen(guesses, answer_upper, gameState, colors);
-            break;
         } else if (guesses.size() == 6) {
             gameState = "lose";
-            printGameScreen(guesses, answer_upper, gameState, colors);
-            break;
-        } else printGameScreen(guesses, answer_upper, gameState, colors);
+        }
+        printGameScreen(guesses, answer_upper, gameState, colors);
     }
 
     stats.Words.push_back(answer_upper);
@@ -236,9 +218,7 @@ void startGame(Stats& stats) {
     stats.Wins.push_back((gameState == "win") ? "Yes" : "No");
 
     cin.ignore();
-    while (!gameState.empty()) {
-        getline(cin, gameState);
-    }
+    while (!gameState.empty()) getline(cin, gameState);
 }
 
 #endif

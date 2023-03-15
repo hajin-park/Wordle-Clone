@@ -1,6 +1,1 @@
-0 5 4 100 5 5
-STAKE 3 Yes
-SUNNY 5 Yes
-TERSE 5 Yes
-TITAN 6 Yes
-SHARK 5 Yes
+2 0 0 0 0 0
