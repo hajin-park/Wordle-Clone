@@ -1,11 +1,11 @@
-#include <iostream>
-#include <fstream>
-#include <vector>
-#include "print.h"
 #define RESET "\033[0m"
 #define BLACK "\033[30m"
 #define YELLOW "\033[33m"
 #define GREEN "\033[32m"
+#include <iostream>
+#include <fstream>
+#include <vector>
+#include "print.h"
 
 using namespace std;
 
@@ -22,6 +22,8 @@ int main(int argc, char* argv[]) {
         ifstream file("../wordle/stats.txt");
         if (file.is_open()) {
             file >> gameState;
+
+            // wordle app is not running
             if (gameState == 0) {
                 if (prev_gameState != gameState) {
                     system("clear");
@@ -31,6 +33,8 @@ int main(int argc, char* argv[]) {
                     prev_gameState = gameState;
                     prev_colors = {{RESET}};
                 }
+
+            // Wordle app is running, not in game
             } else if (gameState == 1) {
                 if (prev_gameState != gameState) {
                     system("clear");
@@ -40,6 +44,8 @@ int main(int argc, char* argv[]) {
                     prev_gameState = gameState;
                     prev_colors = {{RESET}};
                 }
+
+            // Wordle app is currently playing a game
             } else {
                 prev_gameState = gameState;
                 colors.clear();
@@ -51,13 +57,9 @@ int main(int argc, char* argv[]) {
                         if (file.is_open()) {
                             for (int i = 0; i < 3; i++) {
                                 getline(file2, line);
-                                if (line.find(c) != string::npos) {
-                                    colors.back().back() = colorOptions[i];
-                                }
+                                if (line.find(c) != string::npos) colors.back().back() = colorOptions[i];
                             }
-                        } else {
-                            cerr << "Error: File could not be opened" << endl;
-                        }
+                        } else cerr << "Error: File could not be opened" << endl;
                     }
                 }
                 if (prev_colors != colors) {
@@ -66,9 +68,7 @@ int main(int argc, char* argv[]) {
                     prev_colors = colors;
                 }
             }
-        } else {
-            cerr << "Error: File could not be opened" << endl;
-        }
+        } else cerr << "Error: File could not be opened" << endl;
         file.close();
     }
 
