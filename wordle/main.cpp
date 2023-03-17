@@ -1,11 +1,11 @@
 // #defines, #includes, namespace are placed in this order intentionally
-using namespace std;
 #define RESET "\033[0m"
 #define BLACK "\033[30m"
 #define YELLOW "\033[33m"
 #define GREEN "\033[32m"
 #include <iostream>
 #include <vector>
+using namespace std;
 
 struct Stats {
     int gameState, timesPlayed, averageAttempts, winPercentage, currentStreak, longestStreak;

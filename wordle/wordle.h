@@ -26,13 +26,12 @@ string getRandomWord() {
     return answer_lower;
 }
 
-vector<string> guessColors(string guess_upper) {
-    string temp_answer = answer_upper;
+vector<string> guessColors(string guess_upper, string answer_upper) {
     vector<string> color = {BLACK, BLACK, BLACK, BLACK, BLACK};
 
     // 10 iterations - check guess input word twice
     for (int i = 0; i < 10; i++) {
-        size_t index = temp_answer.find(guess_upper[(i % 5)]);
+        size_t index = answer_upper.find(guess_upper[(i % 5)]);
 
         // First five iterations
         if (floor((float)i/float(5)) == 0) {
@@ -40,7 +39,7 @@ vector<string> guessColors(string guess_upper) {
             // Letter is an exact match
             if (index != string::npos && index == (i % 5)) {
                 color[index] = GREEN;
-                temp_answer[index] = ' ';
+                answer_upper[index] = ' ';
             }
         
         // Last five iterations
@@ -49,13 +48,14 @@ vector<string> guessColors(string guess_upper) {
 
                 // Letter is an indirect match
                 color[i % 5] = YELLOW;
-                temp_answer[index] = ' ';
+                answer_upper[index] = ' ';
             }
         }
     }
+    return color;
 }
 
-void updateKeyboardFile(vector<vector<string>> colors) {
+void updateKeyboardFile(vector<vector<string>> colors, string guess_upper) {
     string black_keys;
     string yellow_keys;
     string green_keys;
@@ -97,25 +97,23 @@ void startGame(Stats& stats) {
     vector<vector<string>> colors;
     string gameState = "active";
     bool valid_guess = false;
-    string guess_lower;
-    string guess_upper = guess_lower;
-    transform(guess_upper.begin(), guess_upper.end(), guess_upper.begin(), ::toupper);
-    string answer_lower = getRandomWord();
-    string answer_upper = answer_lower;
-    transform(answer_upper.begin(), answer_upper.end(), answer_upper.begin(), ::toupper);
+    string answer = getRandomWord();
+    transform(answer.begin(), answer.end(), answer.begin(), ::toupper);
 
     while (gameState == "active") {
-        valid_guess = false;
+        bool valid_guess = false;
+        string guess;
         string line;
+
         while (!valid_guess) {
 
             // Check if input guess is a valid 5-letter word
             ifstream allowed_words_file("allowed.txt");
             ifstream answer_words_file("words.txt");
             cout << "Enter guess: ";
-            cin >> guess_lower;
+            cin >> guess;
             while (getline(allowed_words_file, line) || getline(answer_words_file, line)) {
-                if ((line.find(guess_lower) != string::npos && guess_lower.size() == 5) || guess_lower == answer_lower) {
+                if (line.find(guess) != string::npos && guess.size() == 5) {
                     valid_guess = true;
                     break;
                 }
@@ -125,19 +123,20 @@ void startGame(Stats& stats) {
         }
 
         // Assign colors to letters according to Wordle logic
-        guesses.push_back(guess_upper);
-        colors.push_back(guessColors(guess_upper));
-        updateKeyBoardFile(colors);
+        transform(guess.begin(), guess.end(), guess.begin(), ::toupper);
+        guesses.push_back(guess);
+        colors.push_back(guessColors(guess, answer));
+        updateKeyboardFile(colors, guess);
 
         // Check game-ending conditions according to Wordle logic
-        if (guess_upper == answer_upper) gameState = "win";
+        if (guess == answer) gameState = "win";
         else if (guesses.size() == 6) gameState = "lose";
 
-        printGameScreen(guesses, answer_upper, gameState, colors);
+        printGameScreen(guesses, answer, gameState, colors);
     }
 
     // Update game history stats
-    stats.Words.push_back(answer_upper);
+    stats.Words.push_back(answer);
     stats.Attempts.push_back(guesses.size());
     stats.Wins.push_back((gameState == "win") ? "Yes" : "No");
 
