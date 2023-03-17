@@ -5,7 +5,6 @@
 #include <vector>
 #include <iomanip>
 
-using namespace std;
 
 void printStatsScreen(
                 int timesPlayed, 
@@ -13,25 +12,25 @@ void printStatsScreen(
                 int winPercentage, 
                 int currentStreak, 
                 int longestStreak, 
-                vector<string> Words, 
-                vector<int> Attempts, 
-                vector<string> Wins) {
-    cout << "==========================" << endl;
-    cout << "    STATISTICS SUMMARY" << endl;
-    cout << "==========================" << endl;
-    cout << "Times Played:" << setw(13) << right << timesPlayed << endl;
-    cout << "Average Attempts:" << setw(9) << right << averageAttempts << endl;
-    cout << "Win Percentage:" << setw(10) << right << winPercentage << '%' << endl;
-    cout << "Current Streak:" << setw(11) << right << currentStreak << endl;
-    cout << "Longest Streak:" << setw(11) << right << longestStreak << endl << endl << endl;
-    cout << "--------------------------" << endl;
-    cout << "WORD     ATTEMPTS      WIN" << endl;
-    cout << "--------------------------" << endl;
+                std::vector<std::string> Words, 
+                std::vector<int> Attempts, 
+                std::vector<std::string> Wins) {
+    std::cout << "==========================" << std::endl;
+    std::cout << "    STATISTICS SUMMARY" << std::endl;
+    std::cout << "==========================" << std::endl;
+    std::cout << "Times Played:" << setw(13) << right << timesPlayed << std::endl;
+    std::cout << "Average Attempts:" << setw(9) << right << averageAttempts << std::endl;
+    std::cout << "Win Percentage:" << setw(10) << right << winPercentage << '%' << std::endl;
+    std::cout << "Current Streak:" << setw(11) << right << currentStreak << std::endl;
+    std::cout << "Longest Streak:" << setw(11) << right << longestStreak << std::endl << std::endl << std::endl;
+    std::cout << "--------------------------" << std::endl;
+    std::cout << "WORD     ATTEMPTS      WIN" << std::endl;
+    std::cout << "--------------------------" << std::endl;
     for (int i = 0; i < Words.size(); i++) {
-        cout << Words[i] << setw(12) << right << Attempts[i] << setw(9) << right << Wins[i] << endl;
+        std::cout << Words[i] << setw(12) << right << Attempts[i] << setw(9) << right << Wins[i] << std::endl;
     }
-    cout << endl << endl;
-    cout << "Press [enter] to continue" << endl;
+    std::cout << std::endl << std::endl;
+    std::cout << "Press [enter] to continue" << std::endl;
 }
 
 #endif

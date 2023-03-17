@@ -1,11 +1,19 @@
+using namespace std;
 #include <iostream>
 #include <vector>
+
+struct Stats {
+    int gameState, timesPlayed, averageAttempts, winPercentage, currentStreak, longestStreak;
+    vector<string> Words, Wins;
+    vector<int> Attempts;
+};
+
 #include "wordle.h"
+#include "file_manip.h"
 #include "menu_screen.h"
 #include "stats_screen.h"
 #include "tutorial_screen.h"
 
-using namespace std;
 
 int main(int argc, char* argv[]) {
 

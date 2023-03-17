@@ -7,30 +7,29 @@
 
 #include <iostream>
 
-using namespace std;
 
 void printTutorialScreen() {
-    cout << "=============================================" << endl;
-    cout << "                 HOW TO PLAY" << endl;
-    cout << "=============================================" << endl;
-    cout << "Guess the Wordle in 6 tries." << endl << endl << endl;
-    cout << "HOW TO PLAY:" << endl;
-    cout << "- Each guess must be a valid 5 letter word." << endl;
-    cout << "- The color of the tiles will change to show" << endl;
-    cout << "  you how close your guess was to the word." << endl << endl << endl;
-    cout << GREEN << " --- " << RESET << " ---  ---  ---  ---" << endl;
-    cout << GREEN << "| W |" << RESET << "| E || A || R || Y |" << endl;
-    cout << GREEN << " --- " << RESET << " ---  ---  ---  ---" << endl;
-    cout << "W is in the word and in the correct spot." << endl << endl;
-    cout << " --- " << YELLOW << " --- " << RESET << " ---  ---  ---" << endl;
-    cout << "| P |" << YELLOW << "| I |" << RESET << "| L || L || S |" << endl;
-    cout << " --- " << YELLOW << " --- " << RESET << " ---  ---  ---" << endl;
-    cout << "I is in the word but in the wrong spot." << endl << endl;
-    cout << " ---  ---  --- " << BLACK << " --- " << RESET << " ---" << endl;
-    cout << "| V || A || G |" << BLACK << "| U |" << RESET << "| E |" << endl;
-    cout << " ---  ---  --- " << BLACK << " --- " << RESET << " ---" << endl;
-    cout << "U is not in the word in any spot." << endl << endl << endl;
-    cout << "Press [enter] to continue" << endl;
+    std::cout << "=============================================" << std::endl;
+    std::cout << "                 HOW TO PLAY" << std::endl;
+    std::cout << "=============================================" << std::endl;
+    std::cout << "Guess the Wordle in 6 tries." << std::endl << std::endl << std::endl;
+    std::cout << "HOW TO PLAY:" << std::endl;
+    std::cout << "- Each guess must be a valid 5 letter word." << std::endl;
+    std::cout << "- The color of the tiles will change to show" << std::endl;
+    std::cout << "  you how close your guess was to the word." << std::endl << std::endl << std::endl;
+    std::cout << GREEN << " --- " << RESET << " ---  ---  ---  ---" << std::endl;
+    std::cout << GREEN << "| W |" << RESET << "| E || A || R || Y |" << std::endl;
+    std::cout << GREEN << " --- " << RESET << " ---  ---  ---  ---" << std::endl;
+    std::cout << "W is in the word and in the correct spot." << std::endl << std::endl;
+    std::cout << " --- " << YELLOW << " --- " << RESET << " ---  ---  ---" << std::endl;
+    std::cout << "| P |" << YELLOW << "| I |" << RESET << "| L || L || S |" << std::endl;
+    std::cout << " --- " << YELLOW << " --- " << RESET << " ---  ---  ---" << std::endl;
+    std::cout << "I is in the word but in the wrong spot." << std::endl << std::endl;
+    std::cout << " ---  ---  --- " << BLACK << " --- " << RESET << " ---" << std::endl;
+    std::cout << "| V || A || G |" << BLACK << "| U |" << RESET << "| E |" << std::endl;
+    std::cout << " ---  ---  --- " << BLACK << " --- " << RESET << " ---" << std::endl;
+    std::cout << "U is not in the word in any spot." << std::endl << std::endl << std::endl;
+    std::cout << "Press [enter] to continue" << std::endl;
 }
 
 #endif

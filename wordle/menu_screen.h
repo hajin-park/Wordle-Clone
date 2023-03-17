@@ -3,18 +3,17 @@
 
 #include <iostream>
 
-using namespace std;
 
 void printMenuScreen() {
-    cout << "=========================" << endl;
-    cout << "    WELCOME TO WORDLE" << endl;
-    cout << "=========================" << endl << endl << endl;
-    cout << "1. Play Wordle" << endl;
-    cout << "2. How to Play" << endl;
-    cout << "3. Statistics Summary" << endl;
-    cout << "4. Reset Statistics" << endl;
-    cout << "5. Exit" << endl << endl << endl;
-    cout << "Select an option:" << endl;
+    std::cout << "=========================" << std::endl;
+    std::cout << "    WELCOME TO WORDLE" << std::endl;
+    std::cout << "=========================" << std::endl << std::endl << std::endl;
+    std::cout << "1. Play Wordle" << std::endl;
+    std::cout << "2. How to Play" << std::endl;
+    std::cout << "3. Statistics Summary" << std::endl;
+    std::cout << "4. Reset Statistics" << std::endl;
+    std::cout << "5. Exit" << std::endl << std::endl << std::endl;
+    std::cout << "Select an option:" << std::endl;
 }
 
 #endif

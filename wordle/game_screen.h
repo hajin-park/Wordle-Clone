@@ -8,36 +8,35 @@
 #include <iostream>
 #include <vector>
 
-using namespace std;
 
-void printTop(string COLOR) { cout << COLOR << " --- " << RESET; }
-void printMiddle(char c, string COLOR) { cout << COLOR << "| " << c << " |" << RESET; }
-void printBottom(string COLOR) { cout << COLOR << " --- " << RESET; }
-void printGameScreen(vector<string> guesses, string answer, string gameState, vector<vector<string>> colors) {
+void printTop(std::string COLOR) { std::cout << COLOR << " --- " << RESET; }
+void printMiddle(char c, std::string COLOR) { std::cout << COLOR << "| " << c << " |" << RESET; }
+void printBottom(std::string COLOR) { std::cout << COLOR << " --- " << RESET; }
+void printGameScreen(std::vector<std::string> guesses, std::string answer, std::string gameState, std::vector<std::vector<std::string>> colors) {
     system("clear");
 
     for (int i = 0; i < guesses.size(); i++) {
         for (int j = 0; j < 5; j++) {
             printTop(colors[i][j]);
         }
-        cout << endl;
+        std::cout << std::endl;
         for (int j = 0; j < 5; j++) {
             printMiddle(guesses[i][j], colors[i][j]);
         }
-        cout << endl;
+        std::cout << std::endl;
         for (int j = 0; j < 5; j++) {
             printBottom(colors[i][j]);
         }
-        cout << endl;
+        std::cout << std::endl;
     }
-    cout << endl << endl;
+    std::cout << std::endl << std::endl;
     if (gameState == "win") {
-        cout << "Splendid!" << endl << endl << endl;
-        cout << "Press [enter] to continue" << endl;
+        std::cout << "Splendid!" << std::endl << std::endl << std::endl;
+        std::cout << "Press [enter] to continue" << std::endl;
     } else if (gameState == "lose") {
-        cout << "The word was: " << answer << endl << endl << endl;
-        cout << "Better luck next time!" << endl << endl << endl;
-        cout << "Press [enter] to continue" << endl;
+        std::cout << "The word was: " << answer << std::endl << std::endl << std::endl;
+        std::cout << "Better luck next time!" << std::endl << std::endl << std::endl;
+        std::cout << "Press [enter] to continue" << std::endl;
     }
 }
 
