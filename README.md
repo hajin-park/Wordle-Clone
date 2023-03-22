@@ -1,2 +1,3 @@
-# CSE-024-Wordle-Clone
-CSE 024 C++ Wordle Clone Project
+# Wordle Clone
+CSE-024 Advanced Progamming
+C++ Wordle Clone Midterm Project
