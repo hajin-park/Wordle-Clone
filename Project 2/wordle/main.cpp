@@ -9,7 +9,6 @@ int main(int argc, char* argv[]) {
         cout << "Incorrect arguments" << endl;
         exit(0);
     }
-
     Wordle game {argv[1], argv[2], argv[3]};
     string user_option;
     
