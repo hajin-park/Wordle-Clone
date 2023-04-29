@@ -1,12 +1,11 @@
 #include <iostream>
+#include "keyboard.h"
 
 using namespace std;
 
 int main(int argc, char* argv[]) {
-
-    /*
-        your code goes here
-    */
+    Keyboard keyboard;
+    cout << keyboard.test << endl;
 
     return 0;
 }
