@@ -21,6 +21,7 @@ struct Wordle {
         length = std::stoi(length);
         wordsFile = words;
         allowedFile = allowed;
+        fileLengths = {2267, 3937, 6881, 8913, 500};
     }
 
     // Game history statistics
@@ -30,7 +31,7 @@ struct Wordle {
 
     // Custom Wordle length
     std::string wordsFile, allowedFile;
-    std::vector<int> fileLengths = {2267, 3937, 6881, 8913, 500};
+    std::vector<int> fileLengths;
 
     // File manipulation methods
     void readStatsFile() {
@@ -96,9 +97,8 @@ struct Wordle {
         std::string yellow_keys;
         std::string green_keys;
 
-        std::ifstream colors_file_in("../data/colors.txt");
-
         // Keep track of previous keyboard colors
+        std::ifstream colors_file_in("../data/colors.txt");
         if (colors_file_in.is_open()) {
             std::string line;
             getline(colors_file_in, line);
@@ -110,10 +110,10 @@ struct Wordle {
         } else std::cerr << "Error: File could not be opened" << std::endl;
         colors_file_in.close();
 
+        // Add new colors to keyboard color rows
         std::ofstream colors_file_out("../data/colors.txt", std::ios::trunc);
         if (colors_file_out.is_open()) {
 
-            // Add new colors to keyboard color rows
             for (int i = 0; i < length; i++) {
                 if (colors.back()[i] == BLACK) {
                     black_keys[black_keys.size()-length+i] = guess_upper[i];
@@ -141,8 +141,8 @@ struct Wordle {
         std::cout << "Select an option:" << std::endl;
     }
 
-    void printGame(std::vector<std::string> guesses, std::string answer, std::string gameState, std::vector<std::vector<std::string>> colors) {
-        system("clear");
+    void printGame(std::vector<std::string> guesses, std::string answer, std::string gameCondition, std::vector<std::vector<std::string>> colors) {
+        //system("clear");
         for (int i = 0; i < guesses.size(); i++) {
             for (int j = 0; j < length; j++) std::cout << colors[i][j] << " --- " << RESET;
             std::cout << std::endl;
@@ -152,10 +152,10 @@ struct Wordle {
             std::cout << std::endl;
         }
         std::cout << std::endl << std::endl;
-        if (gameState == "win") {
+        if (gameCondition == "win") {
             std::cout << "Splendid!" << std::endl << std::endl << std::endl;
             std::cout << "Press [enter] to continue" << std::endl;
-        } else if (gameState == "lose") {
+        } else if (gameCondition == "lose") {
             std::cout << "The word was: " << answer << std::endl << std::endl << std::endl;
             std::cout << "Better luck next time!" << std::endl << std::endl << std::endl;
             std::cout << "Press [enter] to continue" << std::endl;
@@ -207,15 +207,12 @@ struct Wordle {
 
     // Game logic methods
     std::string getRandomWord() {
-        std::random_device rd; // obtain a random number from hardware
-        std::mt19937 gen(rd()); // seed the generator
-        std::uniform_int_distribution<> distr(0, fileLengths[length-4]); // define the range
-        int number = distr(gen);
-        std::string answer_lower;
+        int number = std::rand() % fileLengths[length-4];
+        std::string answer;
         std::ifstream file("../data/" + wordsFile);
-        for (int i = 0; i < number; i++) getline(file, answer_lower);
+        for (int i = 0; i < number; i++) getline(file, answer);
         file.close();
-        return answer_lower; 
+        return answer; 
     }
 
     std::vector<std::string> matchColors(std::string guess_upper, std::string answer_upper) {
@@ -245,20 +242,20 @@ struct Wordle {
     }
 
     void play() {
+        bool valid_guess;
+        std::string line; 
+        std::string guess;
         std::vector<std::string> guesses;
         std::vector<std::vector<std::string>> colors;
-        std::string gameState = "active";
-        bool valid_guess = false;
+        std::string gameCondition = "active";
+        std::cout << "test1";
         std::string answer = getRandomWord();
         std::transform(answer.begin(), answer.end(), answer.begin(), ::toupper);
-
-        while (gameState == "active") {
-            bool valid_guess = false;
-            std::string guess;
-            std::string line;
+        std::cout << "test2";
+        while (gameCondition == "active") {
+            valid_guess = false;
 
             while (!valid_guess) {
-
                 // Check if input guess is a valid n-letter word
                 std::ifstream allowed_words_file("../data/" + allowedFile);
                 std::ifstream answer_words_file("../data/" + wordsFile);
@@ -281,19 +278,19 @@ struct Wordle {
             updateColorsFile(colors, guess);
 
             // Check game-ending conditions according to Wordle logic
-            if (guess == answer) gameState = "win";
-            else if (guesses.size() == 6) gameState = "lose";
+            if (guess == answer) gameCondition = "win";
+            else if (guesses.size() == 6) gameCondition = "lose";
 
-            printGame(guesses, answer, gameState, colors);
+            printGame(guesses, answer, gameCondition, colors);
         }
 
         // Update game history stats
         Words.push_back(answer);
         Attempts.push_back(guesses.size());
-        Wins.push_back((gameState == "win") ? "Yes" : "No");
+        Wins.push_back((gameCondition == "win") ? "Yes" : "No");
 
         std::cin.ignore();
-        while (!gameState.empty()) getline(std::cin, gameState);   
+        while (!gameCondition.empty()) getline(std::cin, gameCondition);   
     }
 };
 
