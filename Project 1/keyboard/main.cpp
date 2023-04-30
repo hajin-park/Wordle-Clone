@@ -54,7 +54,7 @@ int main(int argc, char* argv[]) {
                     for (char c : row) {
                         ifstream file2("../wordle/keyboard.txt");
                         colors.back().push_back(colorOptions[3]);
-                        if (file.is_open()) {
+                        if (file2.is_open()) {
                             for (int i = 0; i < 3; i++) {
                                 getline(file2, line);
                                 if (line.find(c) != string::npos) colors.back().back() = colorOptions[i];

@@ -12,10 +12,10 @@
 
 struct Keyboard {
     Keyboard() {
-        int gameState = 0;
-        std::vector<std::string> colorOptions = {BLACK, YELLOW, GREEN, RESET};
-        std::vector<std::vector<std::string>> prevColors = {{RESET}};
-        std::vector<std::vector<char>> letters = {
+        gameState = 0;
+        colorOptions = {BLACK, YELLOW, GREEN, RESET};
+        prevColors = {{RESET}};
+        letters = {
             {'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P'},
             {'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L'},
             {'Z', 'X', 'C', 'B', 'N', 'M', 'V'}
@@ -43,6 +43,21 @@ struct Keyboard {
                 std::cout << colors[i][j] << " --- " << RESET;
             }
             std::cout << std::endl;
+        }
+    }
+
+    void getColors() {
+        std::string line;
+        for (std::vector<char> row : letters) {
+            colors.push_back({});
+            for (char c : row) {
+                std::ifstream file("../data/colors.txt");
+                colors.back().push_back(colorOptions[3]);
+                for (int i = 0; i < 3; i++) {
+                    getline(file, line);
+                    if (line.find(c) != std::string::npos) colors.back().back() = colorOptions[i];
+                }
+            }
         }
     }
 };

@@ -9,11 +9,12 @@ int main(int argc, char* argv[]) {
         cout << "Incorrect arguments" << endl;
         exit(0);
     }
+
     Wordle game {argv[1], argv[2], argv[3]};
     string user_option;
     
     // Read in stored game statistics and print out initial menu screen.
-    //system("clear");
+    system("clear");
     game.readStatsFile();
     game.updateStatsFile();
     game.printMenu();
@@ -26,12 +27,12 @@ int main(int argc, char* argv[]) {
         if (user_option == "5") {
             game.gameState = 0;
             game.updateStatsFile();
-            //system("clear");
+            system("clear");
             break;
 
         // Start a new game session, update the stats.txt file before and after the game ends
         } else if (user_option == "1") {
-            //system("clear");
+            system("clear");
             game.gameState = 2;
             game.updateStatsFile();
             game.play();
@@ -41,7 +42,7 @@ int main(int argc, char* argv[]) {
         // Print out the tutorial screen
         } else if (user_option == "2") {
             while (!user_option.empty()) {
-                //system("clear");
+                system("clear");
                 game.printTutorial();
                 getline(cin, user_option);
             }
@@ -49,7 +50,7 @@ int main(int argc, char* argv[]) {
         // Print out the stats screen
         } else if (user_option == "3") {
             while (!user_option.empty()) {
-                //system("clear");
+                system("clear");
                 game.printStats();
                 getline(cin, user_option);
             }
@@ -59,14 +60,14 @@ int main(int argc, char* argv[]) {
             game.resetStatsFile();
             game.readStatsFile();
             while (!user_option.empty()) {
-                //system("clear");
+                system("clear");
                 game.printStats();
                 getline(cin, user_option);
             }
         }
 
         // Reset the console to the menu screen at the end of each process
-        //system("clear");
+        system("clear");
         game.printMenu();
     }
 
